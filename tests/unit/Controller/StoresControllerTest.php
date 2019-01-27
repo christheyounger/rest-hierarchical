@@ -25,7 +25,7 @@ class StoresControllerTest extends TestCase
     $stores = [new Store()];
     $repo = $this->createMock(EntityRepository::class);
     $this->entityManager->method('GetRepository')->willReturn($repo);
-    $repo->expects(static::once())->method('findAll')->willReturn($stores);
+    $repo->expects(static::once())->method('findBy')->willReturn($stores);
     $result = $this->controller->cgetAction();
     $this->assertEquals($stores, $result, 'returns the stores');
   }
@@ -51,6 +51,19 @@ class StoresControllerTest extends TestCase
     $this->assertEquals('new store', $result->getName(), 'name set correctly');
   }
 
+  public function testPostBranchAction(): void
+  {
+    $store = new Store();
+    $data = ['name' => 'new store'];
+    $request = new Request([], $data);
+    $this->entityManager->expects(static::once())->method('persist');
+    $this->entityManager->expects(static::once())->method('flush');
+    $result = $this->controller->postBranchAction($store, $request);
+    $this->assertInstanceOf(Store::class, $result, 'returns a store');
+    $this->assertEquals('new store', $result->getName(), 'name set correctly');
+    $this->assertEquals($store, $result->getParent(), 'parent set correctly');
+  }
+
   public function testPutAction(): void
   {
     $store = new Store();
@@ -62,6 +75,20 @@ class StoresControllerTest extends TestCase
     $this->assertInstanceOf(Store::class, $result, 'returns a store');
     $this->assertEquals($store, $result, 'returned same object');
     $this->assertEquals('new name', $result->getName(), 'name set correctly');
+  }
+
+  public function testPutParentAction(): void
+  {
+    $store = new Store();
+    $oldParent = new Store();
+    $store->setParent($oldParent);
+    $newParent = new Store();
+    $this->entityManager->expects(static::once())->method('flush');
+    $result = $this->controller->putParentAction($store, $newParent);
+    $this->assertInstanceOf(Store::class, $result, 'returns a store');
+    $this->assertEquals($store, $result, 'returned same object');
+    $this->assertEquals($newParent, $result->getParent(), 'parent set correctly');
+    $this->assertNotEquals($oldParent, $result->getParent(), 'unset properly');
   }
 
   public function testDeleteAction(): void

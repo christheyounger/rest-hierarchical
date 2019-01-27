@@ -2,13 +2,15 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity()
  */
-class Store
+class Store implements BranchInterface
 {
+    use BranchTrait;
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -20,6 +22,11 @@ class Store
      * @ORM\Column(type="string", length=255)
      */
     private $name;
+
+    public function __construct()
+    {
+      $this->branches = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {

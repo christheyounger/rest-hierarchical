@@ -19,10 +19,13 @@ class StoresController extends AbstractFOSRestController implements ClassResourc
     $this->entityManager = $em;
   }
 
+  /**
+   * @REST\View(serializerGroups={"Default", "branches"})
+   */
   public function cgetAction(): array
   {
     $repo = $this->entityManager->getRepository(Store::class);
-    return $repo->findAll();
+    return $repo->findBy(['parent' => null]);
   }
 
   public function getAction(Store $store): Store
@@ -44,10 +47,35 @@ class StoresController extends AbstractFOSRestController implements ClassResourc
 
   /**
    * @REST\RequestParam(name="name", nullable=false)
+   * @REST\View(serializerGroups={"Default", "parent"})
+   */
+  public function postBranchAction(Store $store, Request $request): Store
+  {
+    $branch = new Store();
+    $branch->setParent($store);
+    $branch->setName($request->get('name'));
+    $this->entityManager->persist($branch);
+    $this->entityManager->flush();
+    return $branch;
+  }
+
+  /**
+   * @REST\RequestParam(name="name", nullable=false)
    */
   public function putAction(Request $request, Store $store): Store
   {
     $store->setName($request->get('name'));
+    $this->entityManager->flush();
+    return $store;
+  }
+
+  /**
+   * @REST\Put("/stores/{store}/parent/{parent}")
+   * @REST\View(serializerGroups={"Default", "parent"})
+   */
+  public function putParentAction(Store $store, Store $parent): Store
+  {
+    $store->setParent($parent);
     $this->entityManager->flush();
     return $store;
   }
