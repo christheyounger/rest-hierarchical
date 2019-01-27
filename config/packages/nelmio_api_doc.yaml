@@ -1,0 +1,9 @@
+nelmio_api_doc:
+    documentation:
+        info:
+            title: RESTful Hierarchy
+            description: "Challenge: RESTful API for Hierarchical data"
+            version: 1.0.0
+    areas: # to filter documented areas
+        path_patterns:
+            - ^/api(?!/doc) # Accepts routes under /api except /api/doc
