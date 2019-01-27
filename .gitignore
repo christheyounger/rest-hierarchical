@@ -1,18 +1,8 @@
-# Cache and logs (Symfony2)
-/app/cache/*
-/app/logs/*
-!app/cache/.gitkeep
-!app/logs/.gitkeep
-
-# Cache and logs (Symfony3)
+# Cache and logs
 /var/cache/*
 /var/logs/*
 !var/cache/.gitkeep
 !var/logs/.gitkeep
-
-# Parameters
-/app/config/parameters.yml
-/app/config/parameters.ini
 
 # Managed by Composer
 /app/bootstrap.php.cache
@@ -27,11 +17,4 @@
 /web/uploads/
 
 # PHPUnit
-/app/phpunit.xml
 /phpunit.xml
-
-# Build data
-/build/
-
-# Composer PHAR
-/composer.phar
