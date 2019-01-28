@@ -31,7 +31,7 @@ class StoreFixtures extends Fixture
         $branch->setName(\uniqid() . ' branch');
         $branch->setParent($parent);
         $manager->persist($branch);
-        if ($depth < 45) {
+        if ($depth < 50) {
           $this->addBranches($branch, $manager, $depth + 1);
         }
       }
