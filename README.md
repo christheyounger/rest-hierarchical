@@ -32,3 +32,6 @@ in a hierarchical format for the end user. Left to their own devices, the Serial
 and the ORM will traverse the graph by querying for branches of each Store that
 it encounteres. This will inevitibly result in large numbers of queries when a
 reasonable amount of data is added to a reasonable depth.
+
+Adding 5 branches to each store, at a depth of 5 produces 3907 Database Queries
+to build the graph. Obviously this is unacceptable.
