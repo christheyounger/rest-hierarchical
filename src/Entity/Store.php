@@ -7,12 +7,15 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serial;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="App\Repository\TreeRepository")
+ * @ORM\Table(indexes={@ORM\Index(name="path_idx", columns={"path"})})
  * @Serial\ExclusionPolicy("all")
  */
-class Store implements BranchInterface
+class Store implements BranchInterface, PathInterface, TreeInterface
 {
     use BranchTrait;
+    use PathTrait;
+    use TreeTrait;
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

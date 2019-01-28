@@ -16,6 +16,11 @@ class StoreFixtures extends Fixture
         $manager->persist($root);
         $this->addBranches($root, $manager);
         $manager->flush();
+        $root->setPath('/' . $root->getId());
+        foreach ($root->getBranches() as $branch) {
+          $branch->setChildOf($root);
+        }
+        $manager->flush();
     }
 
     private function addBranches(BranchInterface $parent, ObjectManager $manager, int $depth = 1)
