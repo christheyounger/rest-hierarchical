@@ -40,6 +40,16 @@ class StoresControllerTest extends TestCase
     );
   }
 
+  public function testGetBranchesAction(): void
+  {
+    $store = new Store();
+    $this->assertEquals(
+      $store,
+      $this->controller->getBranchesAction($store),
+      'returns the store'
+    );
+  }
+
   public function testPostAction(): void
   {
     $data = ['name' => 'new store'];

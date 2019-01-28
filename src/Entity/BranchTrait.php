@@ -12,12 +12,14 @@ trait BranchTrait
   /**
    * @var BranchInterface
    * @ORM\ManyToOne(targetEntity="App\Entity\Store", inversedBy="branches")
+   * @Serial\Expose()
    * @Serial\Groups("parent")
    */
   private $parent;
   /**
    * @var Collection|BranchInterface[]
    * @ORM\OneToMany(targetEntity="App\Entity\Store", mappedBy="parent")
+   * @Serial\Expose()
    * @Serial\Groups("branches")
    */
   private $branches;

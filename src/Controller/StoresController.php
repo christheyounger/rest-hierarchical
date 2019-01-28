@@ -28,7 +28,18 @@ class StoresController extends AbstractFOSRestController implements ClassResourc
     return $repo->findBy(['parent' => null]);
   }
 
+  /**
+   * @REST\View(serializerGroups={"Default"})
+   */
   public function getAction(Store $store): Store
+  {
+    return $store;
+  }
+
+  /**
+   * @REST\View(serializerGroups={"Default", "branches"})
+   */
+  public function getBranchesAction(Store $store): Store
   {
     return $store;
   }
