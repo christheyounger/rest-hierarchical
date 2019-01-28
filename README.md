@@ -27,6 +27,8 @@ of branch stores beneath it in the hierarchy. This is often refered to as the
 Adjacency List model. At a small scale this is efficient enough and functional,
 but it does not scale well.
 
+### The problem
+
 The problem is retrieving the entire graph from the database and presenting it
 in a hierarchical format for the end user. Left to their own devices, the Serializer
 and the ORM will traverse the graph by querying for branches of each Store that
@@ -35,3 +37,18 @@ reasonable amount of data is added to a reasonable depth.
 
 Adding 5 branches to each store, at a depth of 5 produces 3907 Database Queries
 to build the graph. Obviously this is unacceptable.
+
+Now if a specific depth were specified (and enforced) rather than an arbitrary
+(or infinite) depth, then a query could be written easily enough to fetch all
+the branches with their relationships in tact, however this one query suffers
+from performance degredation, and complexity, the more levels that are added.
+
+### Understanding of common solutions
+
+To my knowledge there exist three common solutions to the problem of storing
+hierarchical data in relational databases. Nested Set, Materialised path, and
+Closure Table. Nested set stores left and right values for each element in the
+hierarchy so that querying part of the hierarchy, and updating it, is inexpensive.
+Materialised path stores a string representation of the path to the root node
+as a field on the entity. The Closure Table solution uses a sepearate table to
+store all relationships to all of the ancestors of a given node, including itself.
