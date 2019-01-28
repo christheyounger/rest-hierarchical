@@ -13,6 +13,22 @@ handle the data structure myself to demonstrate proficiency.
 
 Testing will be via PHPUnit, and docs available at /api/doc.
 
+## Installation
+
+1. `composer install` will install vendor libraries
+2. `bin/console doctrine:database:create` will create the SQLite database.
+3. `bin/console doctrine:migrations:migrate` will set up the database table.
+4. `bin/console doctrine:fixtures:load` will load sample data into the database.
+
+## Usage
+
+`bin/console server:start` will start the web server running.
+
+Visit http://localhost:8000/api/doc in your browser to view the docs, or
+GET http://localhost:8000/api/stores to access the API directly.
+
+Run `bin/phpunit` to run unit tests.
+
 ## The thought process
 
 ### First steps
