@@ -108,3 +108,23 @@ Another limitation is of course the length of the path field. As IDs get larger
 the possible depth of the hierarchy is reduced. If this is too limiting, I'd
 suggest either using one of the other two solutions (Nested Set or Closure Table)
 or encoding the IDs for storage, to limit their length.
+
+#### How I've implemented it
+
+I've put queries relating to the tree structure (get root nodes, get branches,
+delete branches) into TreeRepository.php. The queries are super-simple to
+understand.
+
+I've created a couple of traits for the path functionality and the tree
+functionality.
+
+TreeTrait's buildTree method simply associates child nodes with their parents.
+This allows one parent to have a fully constructed hierarchy if provided with
+all of it's descendants.
+
+PathTrait's methods manage generating the new path for a node when changing
+it's parent node. setChildOf is designed to wrap the existing setParent function
+with the new functionality for setting a path.
+
+Hopefully this is all fairly minimal, easy to follow, and functional. I've
+fully unit tested everything.
