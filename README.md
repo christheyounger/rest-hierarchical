@@ -68,3 +68,5 @@ hierarchy so that querying part of the hierarchy, and updating it, is inexpensiv
 Materialised path stores a string representation of the path to the root node
 as a field on the entity. The Closure Table solution uses a sepearate table to
 store all relationships to all of the ancestors of a given node, including itself.
+
+**_Please see the branches for solutions that I have implemented_**
