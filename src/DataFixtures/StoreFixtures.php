@@ -16,7 +16,7 @@ class StoreFixtures extends Fixture
         $manager->persist($root);
         $this->addBranches($root, $manager);
         $manager->flush();
-        $root->setPath('/' . $root->getEncodedId());
+        $root->setPath($root->getEncodedId());
         foreach ($root->getBranches() as $branch) {
           $branch->setChildOf($root);
         }

@@ -14,7 +14,12 @@ trait PathTrait
 
   public function getEncodedId(): string
   {
-    return \base_convert((string) $this->getId(), 10, 32);
+    $id = \base_convert((string) $this->getId(), 10, 36);
+    $max = PathInterface::ID_LENGTH;
+    if (\strlen($id) > $max) {
+      throw new \LogicException("ID $id is longer than $max characters, cannot encode");
+    }
+    return \str_pad($id, $max, '0', STR_PAD_LEFT);
   }
 
   public function getPath():? string
@@ -29,15 +34,15 @@ trait PathTrait
 
   public function getParentPath(): string
   {
-    $path = $this->getPath();
-    $bits = \explode(PathInterface::PATH_SEPARATOR, $path);
-    \array_pop($bits);
-    return \implode(PathInterface::PATH_SEPARATOR, $bits);
+    return \substr($this->getPath(), 0, -PathInterface::ID_LENGTH);
   }
 
   public function setChildOf(PathInterface $parent): void
   {
-    $path = ($parent ? $parent->getPath() : '') . '/' . $this->getEncodedId();
+    $path = ($parent ? $parent->getPath() : '') . $this->getEncodedId();
+    if (\strlen($path) > PathInterface::MAX_LENGTH) {
+      throw new \LogicException("Path $path is too long to store in our database");
+    }
     $this->setPath($path);
     foreach ($this->getBranches() as $branch)
     {

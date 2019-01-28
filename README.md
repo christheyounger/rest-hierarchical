@@ -108,9 +108,10 @@ Another limitation is of course the length of the path field. As IDs get larger
 the possible depth of the hierarchy is reduced. The realistic maximum depth of
 unencoded IDs is around 10, varying with the length of the IDs.
 
-Encoding the IDs as base 32 increases the possible depth to around 50. If this
-is too limiting, I'd suggest either using one of the other two solutions
-(Nested Set or Closure Table).
+Encoding the IDs as base 36 and using fixed-width IDs instead of seperators
+increases the possible depth to 50 and the max ID to 60466174. This is by no means
+infinite, however it is quite generous. If this is still too limiting, I'd
+suggest either using one of the other two solutions (Nested Set or Closure Table).
 
 #### How I've implemented it
 

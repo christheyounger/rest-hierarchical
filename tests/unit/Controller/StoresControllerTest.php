@@ -62,7 +62,7 @@ class StoresControllerTest extends TestCase
     $result = $this->controller->postAction($request);
     $this->assertInstanceOf(Store::class, $result, 'returns a store');
     $this->assertEquals('new store', $result->getName(), 'name set correctly');
-    $this->assertEquals('/0', $result->getPath(), 'default path set');
+    $this->assertEquals('00000', $result->getPath(), 'default path set');
   }
 
   public function testPostBranchAction(): void

@@ -12,8 +12,8 @@ class TreeRepository extends EntityRepository
   public function getRootNodes(): array
   {
     $q = $this->createQueryBuilder('n')
-              ->andWhere('n.path not like :path')
-              ->setParameter('path', '/%/%');
+              ->andWhere('length(n.path) <= :length')
+              ->setParameter('length', PathInterface::ID_LENGTH);
     return $q->getQuery()->getResult();
   }
 

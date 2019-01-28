@@ -19,8 +19,9 @@ class PathTest extends TestCase
     $this->class = new class implements PathInterface, BranchInterface {
       use BranchTrait;
       use PathTrait;
+      public $id = 341123;
       public function getId(): int {
-        return 341123;
+        return $this->id;
       }
     };
   }
@@ -29,11 +30,25 @@ class PathTest extends TestCase
   {
     $node = new $this->class();
     $this->assertNull($node->getPath());
-    $node->setPath('/1/2/3');
-    $this->assertEquals('/1/2', $node->getParentPath());
+    $node->setPath('000010000200003');
+    $this->assertEquals('0000100002', $node->getParentPath());
     $newParent = new $this->class();
-    $newParent->setPath('/5');
+    $newParent->setPath('00005');
     $node->setChildOf($newParent);
-    $this->assertEquals('/5/ad43', $node->getPath());
+    $this->assertEquals('0000507b7n', $node->getPath());
+    $newParent->setPath(\str_pad("5", 251, "0")); // Child path will be too long!
+    $this->expectException(\LogicException::class);
+    $node->setChildOf($newParent);
+
+  }
+
+  public function testEncoding()
+  {
+    $node = new $this->class();
+    $node->id = 60466175;
+    $this->assertEquals('zzzzz', $node->getEncodedId());
+    $node->id = 60466177; // ID is too large
+    $this->expectException(\LogicException::class);
+    $node->getEncodedId();
   }
 }

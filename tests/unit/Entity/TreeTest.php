@@ -27,9 +27,9 @@ class TreeTest extends TestCase
   public function test()
   {
     $parent = new $this->class();
-    $parent->setPath('/1');
+    $parent->setPath('00001');
     $child = new $this->class();
-    $child->setPath('/1/2');
+    $child->setPath('0000100002');
     $parent->buildTree(new ArrayCollection([$child]));
     $this->assertContains($child, $parent->getBranches(), 'child added');
     $this->assertEquals($parent, $child->getParent(), 'parent set');
