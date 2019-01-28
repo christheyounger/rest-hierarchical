@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Store;
+use App\Entity\PathInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\Controller\Annotations as REST;
@@ -54,6 +55,8 @@ class StoresController extends AbstractFOSRestController implements ClassResourc
     $store = new Store();
     $store->setName($request->get('name'));
     $this->entityManager->persist($store);
+    $this->entityManager->flush();
+    $store->setPath(PathInterface::PATH_SEPARATOR . $store->getID());
     $this->entityManager->flush();
     return $store;
   }

@@ -58,10 +58,11 @@ class StoresControllerTest extends TestCase
     $data = ['name' => 'new store'];
     $request = new Request([], $data);
     $this->entityManager->expects(static::once())->method('persist');
-    $this->entityManager->expects(static::once())->method('flush');
+    $this->entityManager->expects(static::exactly(2))->method('flush');
     $result = $this->controller->postAction($request);
     $this->assertInstanceOf(Store::class, $result, 'returns a store');
     $this->assertEquals('new store', $result->getName(), 'name set correctly');
+    $this->assertEquals('/', $result->getPath(), 'default path set');
   }
 
   public function testPostBranchAction(): void
