@@ -22,6 +22,7 @@ class TreeRepository extends EntityRepository
     $q = $this->createQueryBuilder('n')
               ->andWhere('n.path like :path')
               ->andWhere('n.id != :id')
+              ->addOrderBy('n.path')
               ->setParameter('id', $parent->getId())
               ->setParameter('path', $parent->getPath() . '%');
     return $q->getQuery()->getResult();
