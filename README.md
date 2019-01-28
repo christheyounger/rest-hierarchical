@@ -105,9 +105,12 @@ of a particular node is somewhat more difficult, however that was not a part of
 the specification for this challenge.
 
 Another limitation is of course the length of the path field. As IDs get larger
-the possible depth of the hierarchy is reduced. If this is too limiting, I'd
-suggest either using one of the other two solutions (Nested Set or Closure Table)
-or encoding the IDs for storage, to limit their length.
+the possible depth of the hierarchy is reduced. The realistic maximum depth of
+unencoded IDs is around 10, varying with the length of the IDs.
+
+Encoding the IDs as base 32 increases the possible depth to around 50. If this
+is too limiting, I'd suggest either using one of the other two solutions
+(Nested Set or Closure Table).
 
 #### How I've implemented it
 

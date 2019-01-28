@@ -12,6 +12,11 @@ trait PathTrait
    */
   protected $path;
 
+  public function getEncodedId(): string
+  {
+    return \base_convert((string) $this->getId(), 10, 32);
+  }
+
   public function getPath():? string
   {
     return $this->path;
@@ -32,7 +37,7 @@ trait PathTrait
 
   public function setChildOf(PathInterface $parent): void
   {
-    $path = ($parent ? $parent->getPath() : '') . '/' . $this->getId();
+    $path = ($parent ? $parent->getPath() : '') . '/' . $this->getEncodedId();
     $this->setPath($path);
     foreach ($this->getBranches() as $branch)
     {

@@ -56,7 +56,7 @@ class StoresController extends AbstractFOSRestController implements ClassResourc
     $store->setName($request->get('name'));
     $this->entityManager->persist($store);
     $this->entityManager->flush();
-    $store->setPath(PathInterface::PATH_SEPARATOR . $store->getID());
+    $store->setPath(PathInterface::PATH_SEPARATOR . $store->getEncodedId());
     $this->entityManager->flush();
     return $store;
   }

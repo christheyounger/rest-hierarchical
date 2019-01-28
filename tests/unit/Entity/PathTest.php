@@ -20,7 +20,7 @@ class PathTest extends TestCase
       use BranchTrait;
       use PathTrait;
       public function getId(): int {
-        return 3;
+        return 341123;
       }
     };
   }
@@ -34,6 +34,6 @@ class PathTest extends TestCase
     $newParent = new $this->class();
     $newParent->setPath('/5');
     $node->setChildOf($newParent);
-    $this->assertEquals('/5/3', $node->getPath());
+    $this->assertEquals('/5/ad43', $node->getPath());
   }
 }

@@ -8,6 +8,8 @@ interface PathInterface
 
   public function getId(): ?int;
 
+  public function getEncodedId(): string;
+
   public function getPath(): ?string;
 
   public function getParentPath(): string;
