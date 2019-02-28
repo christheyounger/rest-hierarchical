@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Store;
+use App\Entity\PathInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\Controller\Annotations as REST;
@@ -25,7 +26,7 @@ class StoresController extends AbstractFOSRestController implements ClassResourc
   public function cgetAction(): array
   {
     $repo = $this->entityManager->getRepository(Store::class);
-    return $repo->findBy(['parent' => null]);
+    return $repo->getFullTree();
   }
 
   /**
@@ -41,6 +42,8 @@ class StoresController extends AbstractFOSRestController implements ClassResourc
    */
   public function getBranchesAction(Store $store): Store
   {
+    $repo = $this->entityManager->getRepository(Store::class);
+    $repo->buildTree($store);
     return $store;
   }
 
@@ -53,6 +56,8 @@ class StoresController extends AbstractFOSRestController implements ClassResourc
     $store->setName($request->get('name'));
     $this->entityManager->persist($store);
     $this->entityManager->flush();
+    $store->setPath($store->getEncodedId());
+    $this->entityManager->flush();
     return $store;
   }
 
@@ -63,7 +68,7 @@ class StoresController extends AbstractFOSRestController implements ClassResourc
   public function postBranchAction(Store $store, Request $request): Store
   {
     $branch = new Store();
-    $branch->setParent($store);
+    $branch->setChildOf($store);
     $branch->setName($request->get('name'));
     $this->entityManager->persist($branch);
     $this->entityManager->flush();
@@ -86,14 +91,15 @@ class StoresController extends AbstractFOSRestController implements ClassResourc
    */
   public function putParentAction(Store $store, Store $parent): Store
   {
-    $store->setParent($parent);
+    $repo = $this->entityManager->getRepository(Store::class);
+    $repo->buildTree($store); // because we want to reparent branches too!
+    $store->setChildOf($parent);
     $this->entityManager->flush();
     return $store;
   }
 
   public function deleteAction(Store $store): void
   {
-    $this->entityManager->remove($store);
-    $this->entityManager->flush();
+    $this->entityManager->getRepository(Store::class)->remove($store);
   }
 }

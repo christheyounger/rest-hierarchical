@@ -4,8 +4,8 @@ namespace App\Tests\Unit\Controller;
 
 use App\Controller\StoresController;
 use App\Entity\Store;
+use App\Repository\TreeRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityRepository;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -23,9 +23,9 @@ class StoresControllerTest extends TestCase
   public function testCgetAction(): void
   {
     $stores = [new Store()];
-    $repo = $this->createMock(EntityRepository::class);
+    $repo = $this->createMock(TreeRepository::class);
     $this->entityManager->method('GetRepository')->willReturn($repo);
-    $repo->expects(static::once())->method('findBy')->willReturn($stores);
+    $repo->expects(static::once())->method('getFullTree')->willReturn($stores);
     $result = $this->controller->cgetAction();
     $this->assertEquals($stores, $result, 'returns the stores');
   }
@@ -42,7 +42,10 @@ class StoresControllerTest extends TestCase
 
   public function testGetBranchesAction(): void
   {
+    $repo = $this->createMock(TreeRepository::class);
+    $this->entityManager->method('GetRepository')->willReturn($repo);
     $store = new Store();
+    $repo->expects(static::once())->method('buildTree')->with($store);
     $this->assertEquals(
       $store,
       $this->controller->getBranchesAction($store),
@@ -55,10 +58,11 @@ class StoresControllerTest extends TestCase
     $data = ['name' => 'new store'];
     $request = new Request([], $data);
     $this->entityManager->expects(static::once())->method('persist');
-    $this->entityManager->expects(static::once())->method('flush');
+    $this->entityManager->expects(static::exactly(2))->method('flush');
     $result = $this->controller->postAction($request);
     $this->assertInstanceOf(Store::class, $result, 'returns a store');
     $this->assertEquals('new store', $result->getName(), 'name set correctly');
+    $this->assertEquals('00000', $result->getPath(), 'default path set');
   }
 
   public function testPostBranchAction(): void
@@ -92,7 +96,12 @@ class StoresControllerTest extends TestCase
     $store = new Store();
     $oldParent = new Store();
     $store->setParent($oldParent);
+    $branch = new Store();
+    $store->addBranch($branch);
     $newParent = new Store();
+    $repo = $this->createMock(TreeRepository::class);
+    $this->entityManager->method('GetRepository')->willReturn($repo);
+    $repo->expects(static::once())->method('buildTree')->with($store);
     $this->entityManager->expects(static::once())->method('flush');
     $result = $this->controller->putParentAction($store, $newParent);
     $this->assertInstanceOf(Store::class, $result, 'returns a store');
@@ -103,9 +112,10 @@ class StoresControllerTest extends TestCase
 
   public function testDeleteAction(): void
   {
+    $repo = $this->createMock(TreeRepository::class);
+    $this->entityManager->method('GetRepository')->willReturn($repo);
     $store = new Store();
-    $this->entityManager->expects(static::once())->method('remove')->with($store);
-    $this->entityManager->expects(static::once())->method('flush');
+    $repo->expects(static::once())->method('remove')->with($store);
     $result = $this->controller->deleteAction($store);
   }
 }
